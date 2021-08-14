@@ -1,0 +1,30 @@
+{
+  "name": "twoFactorAuth",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "nodemon index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yeshaq1/two-factor-auth-speak-easy-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Yeshaq1/two-factor-auth-speak-easy-/issues"
+  },
+  "homepage": "https://github.com/Yeshaq1/two-factor-auth-speak-easy-#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "node-json-db": "^1.3.0",
+    "speakeasy": "^2.0.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
