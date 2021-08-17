@@ -5,6 +5,7 @@ import { JsonDB } from 'node-json-db';
 import { Config } from 'node-json-db/dist/lib/JsonDBConfig.js';
 import twilio from 'twilio';
 import dotenv from 'dotenv';
+import twilioRoutes from './routes/twilioRoutes.js';
 
 dotenv.config();
 
@@ -12,11 +13,14 @@ const app = express();
 
 app.use(express.json());
 
+const PORT = process.env.PORT || 5000;
+
 // init a simple json database from node-json. This is used here for testing purposes only.
 // in a real project, any other database can be used.
 const db = new JsonDB(new Config('twoAuthTestDatabase', true, false, '/'));
 
-const PORT = process.env.PORT || 5000;
+// this is set for the twilio routes. 2FA using phone number.
+app.use('/api/twilio', twilioRoutes);
 
 app.get('/api', (req, res) => res.json({ message: 'Two Factor Auth' }));
 
@@ -86,43 +90,6 @@ app.post('/api/validate', (req, res) => {
     } else {
       res.json({ validated: false });
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'User not found' });
-  }
-});
-
-//Twilio constants:
-
-const accountSid = process.env.ACCOUNTSID;
-const authToken = process.env.AUTHTOKEN;
-
-const client = new twilio(accountSid, authToken);
-
-// Verify user using Phone number Twilo
-
-app.post('/api/validate/phone', async (req, res) => {
-  try {
-    const verification = await client.verify
-      .services(process.env.SERVICESID)
-      .verifications.create({ to: '+15146490752', channel: 'sms' });
-
-    res.json(verification);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'User not found' });
-  }
-});
-
-app.post('/api/verify/phone', async (req, res) => {
-  const code = req.body.code;
-
-  try {
-    const verification = await client.verify
-      .services(process.env.SERVICESID)
-      .verificationChecks.create({ to: '+15146490752', code });
-
-    res.json(verification);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'User not found' });
