@@ -7,6 +7,9 @@ const accountSid = process.env.ACCOUNTSID;
 const authToken = process.env.AUTHTOKEN;
 const client = new twilio(accountSid, authToken);
 
+//this can be used as a middleware.
+
+//send the verification code
 const sendValidationCode = async (req, res) => {
   try {
     const verification = await client.verify
@@ -19,6 +22,8 @@ const sendValidationCode = async (req, res) => {
     res.status(500).json({ message: 'User not found' });
   }
 };
+
+// verify the user with the code.
 
 const verfiySmsCode = async (req, res) => {
   const code = req.body.code;

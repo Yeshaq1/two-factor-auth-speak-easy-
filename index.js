@@ -3,7 +3,7 @@ import speakeasy from 'speakeasy';
 import { v4 as uuidv4 } from 'uuid';
 import { JsonDB } from 'node-json-db';
 import { Config } from 'node-json-db/dist/lib/JsonDBConfig.js';
-import twilio from 'twilio';
+
 import dotenv from 'dotenv';
 import twilioRoutes from './routes/twilioRoutes.js';
 
