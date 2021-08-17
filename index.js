@@ -3,6 +3,10 @@ import speakeasy from 'speakeasy';
 import { v4 as uuidv4 } from 'uuid';
 import { JsonDB } from 'node-json-db';
 import { Config } from 'node-json-db/dist/lib/JsonDBConfig.js';
+import twilio from 'twilio';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const app = express();
 
@@ -82,6 +86,43 @@ app.post('/api/validate', (req, res) => {
     } else {
       res.json({ validated: false });
     }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'User not found' });
+  }
+});
+
+//Twilio constants:
+
+const accountSid = process.env.ACCOUNTSID;
+const authToken = process.env.AUTHTOKEN;
+
+const client = new twilio(accountSid, authToken);
+
+// Verify user using Phone number Twilo
+
+app.post('/api/validate/phone', async (req, res) => {
+  try {
+    const verification = await client.verify
+      .services(process.env.SERVICESID)
+      .verifications.create({ to: '+15146490752', channel: 'sms' });
+
+    res.json(verification);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'User not found' });
+  }
+});
+
+app.post('/api/verify/phone', async (req, res) => {
+  const code = req.body.code;
+
+  try {
+    const verification = await client.verify
+      .services(process.env.SERVICESID)
+      .verificationChecks.create({ to: '+15146490752', code });
+
+    res.json(verification);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'User not found' });
